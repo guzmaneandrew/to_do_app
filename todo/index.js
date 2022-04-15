@@ -16,7 +16,7 @@ const port = 3000;
 http.listen(port);
 console.log(`The server is running on port ${port}.`);
 
-    // Use body-parser to convert our front-end data into JavaScript Objects.
+// Use body-parser to convert our front-end data into JavaScript Objects.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
