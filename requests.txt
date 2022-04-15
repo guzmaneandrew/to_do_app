@@ -1,0 +1,65 @@
+POST: Create Task
+name: createTask
+The Date String format will be the default value that the Date Object gives
+send (Front -> Back):
+{
+    description: String,
+    notes: String or null,
+    dueDate: String,
+    created: String,
+    priority: String (1, 2, or 3),
+    deleted: String(date or empty),
+    completed: String(date or empty)
+    id: String
+}
+receive (Back -> Front):
+{
+    message: String,
+    error: Boolean
+}
+--------------------------------
+POST: List Tasks
+name: list
+send (Front -> Back):
+{}
+receive (Back -> Front):
+{
+    list: Array,
+}
+--------------------------------
+POST: Edit Task
+name: editTask
+send (Front -> Back):
+{
+    description: String,
+    notes: String or null,
+    dueDate: String,
+    created: String,
+    priority: String (1, 2, or 3),
+    deleted: String(date or empty),
+    completed: String(date or empty),
+    id: String
+}
+receive (Back -> Front):
+{
+    message: String,
+    error: boolean
+}
+--------------------------------
+POST: Get Task
+name: getTask
+send (Front -> Back):
+{
+    id: String
+}
+receive (Back -> Front):
+{
+    description: String,
+    notes: String or null,
+    dueDate: String,
+    created: String,
+    priority: String (1, 2, or 3),
+    deleted: String(date or empty),
+    completed: String(date or empty),
+    id: String
+}

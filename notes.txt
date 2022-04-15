@@ -1,0 +1,85 @@
+To Do App Definition:
+- Plan tasks
+- Make a list, multiple lists(for subjects/topics)
+- Add, edit, read, delete tasks
+- Add notes to each task
+- Marking tasks as complete
+- Time Management (due dates and time)
+- Prioritize tasks
+- Focus (indicate which tasks are most crucial)
+
+CODE TASKS
+- Front-end web page - allows the user to create tasks, edit tasks, delete tasks, and read tasks
+- Will the website have multiple web pages or a single web page("app")?
+- If HTTP Requests fail, mention on website for that action.
+
+FRONT-END GOALS
+
+1) Create tasks:
+- Textbox - for task description. Show message if empty.
+- Texbox - for additional task notes (optional)
+- Dropdown box - select the due date(doesn't include time) (optional)
+- Priority - 3 levels (user choice) (optional)
+- Cancel button - (depending on UI)
+- Submit button - creates the task
+    > When the user presses the submit button, add a timestamp for creation date to the task. 
+
+2) Edit tasks:
+- Same thing as create tasks, but loads in existing values
+- Submit button - says "Update Task" instead
+- Delete button - removes the current task from the To-Do app
+
+3) Delete tasks:
+- Delete button - creates confirmation popup.
+- Confirmation - pop up asking to confirm. Warning of irreversible action. If accepted, then delete.
+
+4) Read Tasks:
+- List all tasks
+- For each task, display: completed/not completed 
+- Complete button
+- Delete button
+- Edit button
+- Task description
+- Ordering: based on priorities, dates, and completed/not completed status
+
+5) Settings Page:
+- For quick task creation, we need to make some of these optional, or have default values.
+    Date: start with one week
+    Smart ordering: ordering is based on percentage of time passed for a task
+
+------------------------------------------------
+Back-end - saving and retrieving tasks. Serving web pages.
+
+BACK-END GOALS
+1) Read 
+- Package up all Task Objects in an Array and send them to the front-end.
+
+2) Edit
+- Receive the Task to be edited(usually through an ID) and change the existing values stored with the new values provided. 
+
+3) Add 
+- Receive a Task Object and add it to the existing set of Tasks. Create and attach and ID to this new task. Return confirmation of newTask. Set the complete property to false.
+
+4) Delete 
+- Find Task to be deleted, and remove it from the set of Tasks. Return confirmation of deletion or failed to find Task to delete.
+
+5) Mark Task as Complete 
+- Find Task to be marked, and change the Complete property to true.
+
+CHANGES
+- Added a unique hash to ID each To Do task
+
+FUTURE FEATURES
+- Multiple list feature
+- User login/accounts
+- Show error when inputting due date from the past.
+
+FUTURE NOTES
+- Add cancel button to create tasks section if it is moved into a pop-up.
+- Remove MD5 implementation as MongoDB IDs will take over.
+
+BUGS
+- The value for date input is not "correct" even though we provide a properly formatted value
+- When converting HTML dates to JS Dates, the date changes by -1 day
+- If a task is not found under getTask, we return an error message
+- For the /list post method, we do not handle errors on the front end, we only expect a list.
