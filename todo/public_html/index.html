@@ -65,9 +65,9 @@
                 updateList(response.list);
             });
 
-            //Run the following code when the Create Button is clicked...
+            //Run the following code when the user clicks the Create button...
             $("#create-button").click(function(){
-                //Build new Object that holds the values provided by the user in the HTML forms. Generate time stamps as well.
+                //Build an Object that holds the values provided by the user in the HTML forms. Generate time stamps as well.
                 let newTask = {
                     description: $("#task-description").val(),
                     notes: $("#task-notes").val(),
@@ -77,8 +77,7 @@
                     deleted: "",
                     completed: ""
                 };
-
-                //POST request to create the task. Send the Object to the createTask Post handler.Console log the response of the server. 
+                //POST request to create the task. Send the newTask Object to the createTask Post handler.Console log the response of the server. 
                 $.post("http://localhost:3000/createTask", newTask, function(response){
                     
                     $("#message").html(response.message);
@@ -88,64 +87,117 @@
                     } else {
                         $("#message").css("color", "green");
                     }
-                    $.post("http://localhost:3000/list", {}, function(response) {
-                    updateList(response.list);
-                    });
                     
+                    $.post("http://localhost:3000/list", {}, function(response) {
+                        updateList(response.list);
+                    });  
                 });
             });
 
         });
 
-        //Refreshes the list on the page whenever there is a new item
+        //This function will take in an array of Todo objects, and create an li element for each of them and place inside of the existing ul. This function deletes any existing items in the URL.
         function updateList(arrayList){
+            
             $("#tasks").html("");
 
             for(let i = 0; i < arrayList.length; i++){
                 let task = arrayList[i];
                 
                 let html = 
-                `<li id="${task.id}">
+                `<li id="${task._id}">
                     Task: ${task.description}<br />
-                    Due by: ${task.dueDate}<br />
+                    Due By: ${task.dueDate}<br />
                     Notes: ${task.notes}<br />
                     Priority: ${task.priority}<br />
                     <button class="edit-button">Edit</button>
+                    <button class="complete-button">Complete</button>
                 </li>`;
             
                 $("#tasks").append(html);
-               
-            }      
-            
+            }
+
             $(".edit-button").click(function() {
-                
-                var currentLi = $(this).parent();
+                const task = $(this).parent();
+                editTask(task);
+            });
 
-                const dataToSend = {
-                    id : currentLi.attr("id")
-                };
-
-                console.log(dataToSend);
-                //currentLi.empty();
-
-                $.post("http://localhost:3000/getTask", dataToSend, function(response){
-                    
-                    let html = 
-                    `<li id="${response.id}">
-                        Task: <input type="text" value="${response.description}"><br />
-                        Due by: ${response.dueDate}<br />
-                        Notes: <input type="text" value="${response.notes}"><br />
-                        Priority: ${response.priority}<br />
-                        <button class="edit-button">Edit</button>
-                    </li>`;
-
-                    currentLi.html(html);
-                });
-            
-             });
-
-
+            $(".complete-button").click(function () {
+                const task = $(this).parent();
+                completeTask(task);
+            });
         }
+
+        function completeTask(taskLi) {
+            let dataToSend = {
+                _id: taskLi.attr("id")
+            }
+
+            $.post("http://localhost:3000/completeTask", dataToSend, function(response){
+                console.log(response.success);
+
+                if(response.success){
+                    console.log("Task completed");
+                } else {
+                    console.log("Something happened in the backend");
+                }
+            });
+        }
+
+        function editTask(taskLi) {
+
+            const dataToSend = {
+                id: taskLi.attr("id")
+            };
+            //console.log(dataToSend);
+
+            $.post("http://localhost:3000/getTask", dataToSend, function(response){
+
+                console.log("Service response: " + response);
+
+                let html = 
+                `
+                    Task: <input type="text" value="${response.description}"><br />
+                    Due by: ${response.dueDate}<br />
+                    Notes: <input type="text" value="${response.notes}"><br />
+                    Priority: <input type="number" min="1" max="3" value="${response.priority}"<br />
+                    <br />
+                    <button class="cancel-button">Cancel</button>
+                    <button class="save-button">Save Changes</button>
+                `;
+
+                taskLi.html(html);
+
+                $(".cancel-button").click(function(){
+                    cancelTask(taskLi, response);
+                });
+                
+            });          
+        }
+
+        function cancelTask(taskLi, response) {
+            
+            let html = `
+                Task: ${response.description}<br />
+                Due by: ${response.dueDate}<br />
+                Notes: ${response.notes}<br />
+                Priority: ${response.priority}<br />
+                <button class="edit-button">Edit</button>
+                <button class="complete-button">Complete</button>
+            `;
+
+            taskLi.html(html);
+            let newEditButton = taskLi.children(".edit-button");
+            let newCompleteButton = taskLi.children(".complete-button");
+
+            newEditButton.click(function() {
+                editTask(taskLi);
+            });
+
+            newCompleteButton.click(function() {
+                completeTask(taskLi);
+            });
+    }
     </script>
 </body>
 

@@ -73,10 +73,12 @@ FUTURE FEATURES
 - Multiple list feature
 - User login/accounts
 - Show error when inputting due date from the past.
+- Add pagination feature
 
 FUTURE NOTES
 - Add cancel button to create tasks section if it is moved into a pop-up.
 - Remove MD5 implementation as MongoDB IDs will take over.
+- Check out nodemon
 
 BUGS
 - The value for date input is not "correct" even though we provide a properly formatted value

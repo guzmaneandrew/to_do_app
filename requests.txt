@@ -63,3 +63,14 @@ receive (Back -> Front):
     completed: String(date or empty),
     id: String
 }
+--------------------------------
+POST: Complete Task
+name: completeTask
+send (Front -> Back):
+{
+    id: String
+}
+receive (Back -> Front):
+{
+    success: Boolean
+}

@@ -1,27 +1,23 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const req = require('express/lib/request');
-const md5 = require('md5');
-const credentials = require('./credentials.js');
-const res = require('express/lib/response');
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const req = require("express/lib/request");
+const md5 = require("md5");
+const credentials = require("./credentials.js");
 
 //Setup express
-    //An instance of express is created
 const app = express();
-    //Links http module with Express "package"
 const http = require('http').Server(app);
-    //Server is started and listens on port 3000 for connections
 const port = 3000;
 http.listen(port);
 console.log(`The server is running on port ${port}.`);
 
-    // Use body-parser to convert our front-end data into JavaScript Objects.
+// Use body-parser to convert our front-end data into JavaScript Objects.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 //Custom Values
-const tasks = [];
+//const tasks = []; no longer using this, moved to database
 const dbUrl = credentials.dbUrl;
 
 //Setup mongoose
@@ -34,27 +30,28 @@ const mongooseOptions = {
 mongoose.connect(dbUrl, mongooseOptions, function(error){
     checkError(error, "Successfully connected to MongoDB.");  
 });
+
     //"Links" MongoDB errors to console
 let db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB Error: "));
+
     //Tell mongoose what a JS promise is
 mongoose.Promise = global.Promise;
 
 //Setup MongoDB
     //Create a MongoDB Schema
 const taskStructure = {
-    description : String,
-    notes : String,
-    dueDate : String,
-    created : String,
-    priority : String,
-    deleted : String,
-    completed : String,
-}
+    description: String,
+    notes: String,
+    dueDate: String,
+    created: String,
+    priority: String,
+    deleted: String,
+    completed: String
+};
 let taskSchema = new mongoose.Schema(taskStructure);
-    //Build a model out of out Schema
-let taskModel = new mongoose.model("tasks", taskSchema)
-
+    //Build a model out of our Schema
+let taskModel = new mongoose.model("tasks", taskSchema);
 
 //EXPRESS PAGE ROUTES: Routes can have one or more handler functions, which are executed when the route is matched
 //Tell our Express server when someone requests nothing, just types in the domain name
@@ -82,6 +79,7 @@ app.post("/createTask", function(request, response){
 
         //Save newTask to database
         let taskObject = new taskModel(newTask);
+
         taskObject.save(function(error){
             checkError(error, "Successfully saved task to database.");
             
@@ -90,12 +88,14 @@ app.post("/createTask", function(request, response){
                     message: "Something bad happened saving this task. Contact support.",
                     error: true
                 };
+
                 response.send(message);
             } else {
                 let message = {
                     message: "Task saved successfully!",
                     error: false
                 };
+
                 response.send(message);
             }
         });
@@ -103,32 +103,60 @@ app.post("/createTask", function(request, response){
     }
 });
 
-app.post("/list", function (request, response) {
+app.post("/list", function(request, response) {
+
     taskModel.find({}, function(error, results){
+
         checkError(error, "Successfully received tasks from database.");
 
         if(error) {
             let responseObject = {
                 list: []
             }
+
             response.send(responseObject);
         }
         else {
             let responseObject = {
                 list: results
             }
+
             response.send(responseObject);
         }
     });
 });
 
-app.post("/getTask", function(request, response){
-    for(let i = 0; i < tasks.length; i++){
-        if (tasks[i].id === request.body.id) {
-            response.send(tasks[i]);
-        } 
-    }
+app.post("/getTask", function(request, response) {
+
+    taskModel.find({_id: request.body.id}, function(error, results){
+
+        checkError(error, "Successfully searched documents.");
+        
+        response.send(results[0]);
+    });
+
+    // for(let i = 0; i < tasks.length; i++){
+    //     if (tasks[i]._id === request.body._id) {
+    //         response.send(tasks[i]);
+    //     } 
+    // }
     //Return error message if we don't find it
+});
+
+app.post("/completeTask", function(request, response) {
+
+    let taskId = request.body._id;
+
+    taskModel.findByIdAndUpdate({_id: taskId}, {completed: "true"}, function(error, results) {
+
+        checkError(error, "Successfully updated a document.");
+        
+        if(error) {
+            response.send({success: false});
+        } else {
+            response.send({success: true});
+        }
+    });
 });
 
 function checkError(error, successMessage){
