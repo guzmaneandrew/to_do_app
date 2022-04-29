@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const req = require("express/lib/request");
 const md5 = require("md5");
 const credentials = require("./credentials.js");
+const { stringify } = require("querystring");
 
 //Setup express
 const app = express();
@@ -143,12 +144,48 @@ app.post("/getTask", function(request, response) {
     //Return error message if we don't find it
 });
 
+app.post("/deleteTask", function(request, response) {
+    taskModel.findByIdAndRemove({_id: request.body._id}, function(error, results) {
+        checkError(error, "Successfully searched documents.");
+        
+        let objectToSend = {
+            success: true,
+            oldCopy: results
+        };
+
+        response.send(objectToSend);
+    });
+});
+
 app.post("/completeTask", function(request, response) {
 
     let taskId = request.body._id;
 
     taskModel.findByIdAndUpdate({_id: taskId}, {completed: "true"}, function(error, results) {
 
+        checkError(error, "Completed a task and successfully updated a document.");
+        
+        if(error) {
+            response.send({success: false});
+        } else {
+            response.send({success: true});
+        }
+    });
+});
+
+app.post("/updateTask", function(request, response) {
+    let taskId = request.body._id;
+    
+    //We could delete _id in request object
+    let updates = {
+        notes: request.body.notes,
+        description: request.body.description,
+        priority: request.body.priority,
+        dueDate: request.body.dueDate,
+        created: request.body.created
+    };
+
+    taskModel.findByIdAndUpdate({_id: taskId}, updates, function(error, results) {
         checkError(error, "Successfully updated a document.");
         
         if(error) {

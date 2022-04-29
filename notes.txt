@@ -14,7 +14,6 @@ CODE TASKS
 - If HTTP Requests fail, mention on website for that action.
 
 FRONT-END GOALS
-
 1) Create tasks:
 - Textbox - for task description. Show message if empty.
 - Texbox - for additional task notes (optional)
@@ -67,7 +66,7 @@ BACK-END GOALS
 - Find Task to be marked, and change the Complete property to true.
 
 CHANGES
-- Added a unique hash to ID each To Do task
+- Date string, have one for displayng and another for timestamp
 
 FUTURE FEATURES
 - Multiple list feature
@@ -77,11 +76,15 @@ FUTURE FEATURES
 
 FUTURE NOTES
 - Add cancel button to create tasks section if it is moved into a pop-up.
-- Remove MD5 implementation as MongoDB IDs will take over.
+- COMPLETE: Remove MD5 implementation as MongoDB IDs will take over.
 - Check out nodemon
+- Merge completeTask and updateTask in one post request, use if loop to dictate which
 
 BUGS
 - The value for date input is not "correct" even though we provide a properly formatted value
-- When converting HTML dates to JS Dates, the date changes by -1 day
+    FIXED: todayString was not being properly created
+- When converting HTML dates to JS Dates, the date is off by -1 day
+    FIXED: getMonth is zero-based and returns month number. 
 - If a task is not found under getTask, we return an error message
 - For the /list post method, we do not handle errors on the front end, we only expect a list.
+- When we cancel a task changes on the frontend, it also cancels task items after the current task that is currently being edited

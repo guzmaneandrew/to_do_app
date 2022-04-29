@@ -74,3 +74,30 @@ receive (Back -> Front):
 {
     success: Boolean
 }
+--------------------------------
+POST: Update Task
+name: updateTask
+send (Front -> Back):
+{
+    _id: String
+    description: String,
+    notes: String,
+    priority: String
+}
+receive (Back -> Front):
+{
+    success: Boolean,
+
+}
+--------------------------------
+POST: Delete Task
+name: deleteTask
+send (Front -> Back):
+{
+    _id: String
+}
+receive (Back -> Front):
+{
+    success: Boolen,
+    oldCopy: Object
+}
