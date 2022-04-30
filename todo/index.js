@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const req = require("express/lib/request");
-const md5 = require("md5");
 const credentials = require("./credentials.js");
 const { stringify } = require("querystring");
 
