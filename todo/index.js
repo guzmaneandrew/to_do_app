@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const req = require("express/lib/request");
 const credentials = require("./credentials.js");
-const { stringify } = require("querystring");
+const md5 = require("md5");
+const session = require("express-session");
 
 //Setup express
 const app = express();
@@ -15,6 +16,14 @@ console.log(`The server is running on port ${port}.`);
 // Use body-parser to convert our front-end data into JavaScript Objects.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+//Session setup
+app.use(session({
+    secret: 'keyboard dog',
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true }
+}));
 
 //Custom Values
 //const tasks = []; no longer using this, moved to database
@@ -41,6 +50,7 @@ mongoose.Promise = global.Promise;
 //Setup MongoDB
     //Create a MongoDB Schema
 const taskStructure = {
+    owner: mongoose.ObjectId,
     description: String,
     notes: String,
     dueDate: String,
@@ -53,12 +63,69 @@ let taskSchema = new mongoose.Schema(taskStructure);
     //Build a model out of our Schema
 let taskModel = new mongoose.model("tasks", taskSchema);
 
+let usersStructure = {
+    username: String,
+    password: String,
+    email: String,
+    salt: String
+}
+
+let userSchema = new mongoose.Schema(usersStructure);
+let usersModel = new mongoose.model("users", userSchema);
+
 //EXPRESS PAGE ROUTES: Routes can have one or more handler functions, which are executed when the route is matched
 //Tell our Express server when someone requests nothing, just types in the domain name
 app.use("/", express.static("public_html/"));
 
-//POST Handlers (technically also Express routes)
-app.post("/createTask", function(request, response){
+//POST Handlers
+app.post("/userSession", function(request, response) { 
+    
+    const userDetails = request.body;
+
+    if (userDetails.type === "login") {
+
+        const userQuery = {
+            username: userDetails.username,
+            password: md5(userDetails.password)
+        }
+
+        usersModel.find(userQuery, function(error, results) {
+
+            if (results.length === 1) {
+                request.session.username = userDetails.username;
+                request.session.loggedIn = true;
+                request.session.dbId = results[0]._id;
+
+                response.send({
+                    username: userDetails.username,
+                    message: ""
+                });
+            } else {
+                response.send({
+                    username: null,
+                    message: "Sorry, but username or password is wrong. Try again."
+                });
+            }  
+        });
+    } else if (userDetails.type === "logout") {
+
+        request.session.loggedIn = false;
+        request.session.destroy();
+        response.send({});
+
+    } else if (userDetails.type === "continue") {
+
+        console.log(userDetails);
+
+        if (request.session.loggedIn === true ) {
+            response.send({username: request.session.username, message: ""});
+        } else {
+            response.send({message: null});
+        }
+    }
+});
+
+app.post("/createTask", function(request, response) {
     
     //get the message data in the request
     let newTask = request.body;
@@ -76,6 +143,8 @@ app.post("/createTask", function(request, response){
         // newTask.id = hash;
         //Save task to array
         //tasks.push(newTask);
+        console.log(request.session);
+        newTask.owner = request.session.dbId;
 
         //Save newTask to database
         let taskObject = new taskModel(newTask);
@@ -104,8 +173,8 @@ app.post("/createTask", function(request, response){
 });
 
 app.post("/list", function(request, response) {
-
-    taskModel.find({}, function(error, results){
+    console.log("dbId: " + request.session.dbId);
+    taskModel.find({owner: request.session.dbId}, function(error, results){
 
         checkError(error, "Successfully received tasks from database.");
 
@@ -128,7 +197,7 @@ app.post("/list", function(request, response) {
 
 app.post("/getTask", function(request, response) {
 
-    taskModel.find({_id: request.body.id}, function(error, results){
+    taskModel.find({owner: request.session.dbId, _id: request.body.id}, function(error, results){
 
         checkError(error, "Successfully searched documents.");
         
@@ -144,7 +213,7 @@ app.post("/getTask", function(request, response) {
 });
 
 app.post("/deleteTask", function(request, response) {
-    taskModel.findByIdAndRemove({_id: request.body._id}, function(error, results) {
+    taskModel.findByIdAndRemove({owner: request.session.dbId, _id: request.body._id}, function(error, results) {
         checkError(error, "Successfully searched documents.");
         
         let objectToSend = {
@@ -160,7 +229,7 @@ app.post("/completeTask", function(request, response) {
 
     let taskId = request.body._id;
 
-    taskModel.findByIdAndUpdate({_id: taskId}, {completed: "true"}, function(error, results) {
+    taskModel.findByIdAndUpdate({owner: request.session.dbId, _id: taskId}, {completed: "true"}, function(error, results) {
 
         checkError(error, "Completed a task and successfully updated a document.");
         
@@ -184,7 +253,7 @@ app.post("/updateTask", function(request, response) {
         created: request.body.created
     };
 
-    taskModel.findByIdAndUpdate({_id: taskId}, updates, function(error, results) {
+    taskModel.findByIdAndUpdate({owner: request.session.dbId, _id: taskId}, updates, function(error, results) {
         checkError(error, "Successfully updated a document.");
         
         if(error) {

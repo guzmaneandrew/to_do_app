@@ -88,3 +88,4 @@ BUGS
 - If a task is not found under getTask, we return an error message
 - For the /list post method, we do not handle errors on the front end, we only expect a list.
 - When we cancel a task changes on the frontend, it also cancels task items after the current task that is currently being edited
+- Change all callback functinos to arrow functions

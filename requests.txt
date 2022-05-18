@@ -101,3 +101,17 @@ receive (Back -> Front):
     success: Boolen,
     oldCopy: Object
 }
+--------------------------------
+POST: Login/Logout User
+name: userSession
+send (Front -> Back):
+{
+    type: String (login or logout),
+    username: String,
+    password: String
+}
+receive (Back -> Front):
+{
+    username: String,
+    message: String
+}
