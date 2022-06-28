@@ -39,14 +39,9 @@
             <input type="text" id="task-notes" placeholder="(optional)" /> <br />
             <label for="task-due-date">Task Due Date</label> <br />
             <input type="date" id="task-due-date"><br />
-            <div id="priority">
-                <p>Priority</p>
-                <input type="radio" name="priority" id="low" value="Low"/>
-                <label for="low">Low</label><br />
-                <input type="radio" name="priority" id="medium" checked="true" value="Moderate"/>
-                <label for="medium">Moderate</label><br />
-                <input type="radio" name="priority" id="high" value="Urgent"/>
-                <label for="high">Urgent</label><br />
+            <div id="priority-list">
+                <p>Priority 1(low) - 3(high)</p>
+                <input id="priority" type="number" value="2" min="1" max="3"><br />
             </div>
             <button id="create-button">Create Task</button>
             <p id="message"></p>
@@ -144,7 +139,7 @@
                     notes: $("#task-notes").val(),
                     dueDate: $("#task-due-date").val(),
                     created: todayValue,
-                    priority: $("input[name=priority]:checked").val(),
+                    priority: $("#priority").val(),
                     deleted: "",
                     completed: ""
                 };
