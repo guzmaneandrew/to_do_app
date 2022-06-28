@@ -108,11 +108,13 @@ app.post("/userSession", function(request, response) {
             }  
         });
     } else if (userDetails.type === "create-account") {
-        console.log("create account");
 
-        let newUser = request.body;
+        const newUser = {
+            username: userDetails.username,
+            password: md5(userDetails.password)
+        }
 
-        if(newUser.username === "" || newUser.password === "") {
+        if(newUser.username === "" || newUser.password === "d41d8cd98f00b204e9800998ecf8427e") {
             let message = {
                 message: "Please enter username and password to create an account.",
                 error: true
@@ -121,26 +123,61 @@ app.post("/userSession", function(request, response) {
         } else {    
             //Save newTask to database
             let userObject = new userModel(newUser);
-    
-            userObject.save(function(error){
-                checkError(error, "Successfully saved new user to database.");
-                
-                if(error){
+
+            userModel.find({username: userDetails.username}, function(error, results){
+
+                if (typeof results[0] !== "undefined") {
+
                     let message = {
-                        message: "An error occured while attempting to create a new account.",
+                        message: "An account with this username already exists.",
                         error: true
                     };
-    
-                    response.send(message);
+                    response.send(message);   
+
                 } else {
-                    let message = {
-                        message: "Account created succcessfully.",
-                        error: false
-                    };
-    
-                    response.send(message);
+
+                    userObject.save(function(error){
+                        checkError(error, "Successfully created new account and saved new user to database.");
+                        
+                        if(error){
+                            let message = {
+                                message: "An error occured while attempting to create a new account.",
+                                error: true
+                            };
+            
+                            response.send(message);
+                        } else {
+                            let message = {
+                                message: "Account created succcessfully.",
+                                error: false
+                            };
+            
+                            response.send(message);
+                        }
+                    });
                 }
             });
+
+
+            // userObject.save(function(error){
+            //     checkError(error, "Successfully created new account and saved new user to database.");
+                
+            //     if(error){
+            //         let message = {
+            //             message: "An error occured while attempting to create a new account.",
+            //             error: true
+            //         };
+    
+            //         response.send(message);
+            //     } else {
+            //         let message = {
+            //             message: "Account created succcessfully.",
+            //             error: false
+            //         };
+    
+            //         response.send(message);
+            //     }
+            // });
         }
 
     } else if (userDetails.type === "logout") {
