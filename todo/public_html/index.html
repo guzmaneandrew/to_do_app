@@ -11,7 +11,6 @@
     <!-- Load jQuery first, then html, and finally JS-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
-
 <body>
 
     <h1>To-Do App</h1>
@@ -60,7 +59,7 @@
             $.post("http://localhost:3000/userSession", 
                 {type: "continue", username: null, password: null},
                 function(response) {
-                    console.log(response);
+                    //console.log(response);
                     if (response.message === "") {
 
                         $("#login").hide();
@@ -120,6 +119,10 @@
 
                     $("#login").show();
                 });
+
+                $.post("http://localhost:3000/list", {}, function(response) {
+                        updateList(response.list);
+                    });
             });
 
             //Set the due date on Create Task to today's date
