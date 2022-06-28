@@ -21,7 +21,9 @@
         <label for="">Password:</label><br />
         <input type="password" id="password"><br />
         <button id="login-button">Login</button>
+        <button id="create-acc-button">Create Account</button>
         <p id="login-message"></p>
+        <p id="create-acc-message"></p>
     </div>
 
     <div id="logout">
@@ -95,6 +97,34 @@
                     
                     } else {
 
+                        $("#login-message").html(response.message);
+                        $("#username").val("");
+                        $("#password").val("");
+                    }
+                });
+            });
+
+            $("#create-acc-button").click(function() {
+                
+                const details = {
+                    type: "create-account",
+                    username: $("#username").val(),
+                    password: $("#password").val()
+                };
+
+                $.post("http://localhost:3000/userSession", details, function(response) {
+                    
+                    if (response.message === "") {
+
+                        $("#login").hide();
+                        $("#user-message").html(`Welcome, ${details.username}!`);
+                        $("#logout").show();     
+                        
+                    $.post("http://localhost:3000/list", {}, function(response) {
+                        updateList(response.list);
+                    });
+                    
+                    } else {
                         $("#login-message").html(response.message);
                         $("#username").val("");
                         $("#password").val("");

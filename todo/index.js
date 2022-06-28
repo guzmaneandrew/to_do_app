@@ -63,15 +63,15 @@ let taskSchema = new mongoose.Schema(taskStructure);
     //Build a model out of our Schema
 let taskModel = new mongoose.model("tasks", taskSchema);
 
-let usersStructure = {
+let userStructure = {
     username: String,
     password: String,
     email: String,
     salt: String
 }
 
-let userSchema = new mongoose.Schema(usersStructure);
-let usersModel = new mongoose.model("users", userSchema);
+let userSchema = new mongoose.Schema(userStructure);
+let userModel = new mongoose.model("users", userSchema);
 
 //EXPRESS PAGE ROUTES: Routes can have one or more handler functions, which are executed when the route is matched
 //Tell our Express server when someone requests nothing, just types in the domain name
@@ -89,7 +89,7 @@ app.post("/userSession", function(request, response) {
             password: md5(userDetails.password)
         }
 
-        usersModel.find(userQuery, function(error, results) {
+        userModel.find(userQuery, function(error, results) {
 
             if (results.length === 1) {
                 request.session.username = userDetails.username;
@@ -107,6 +107,42 @@ app.post("/userSession", function(request, response) {
                 });
             }  
         });
+    } else if (userDetails.type === "create-account") {
+        console.log("create account");
+
+        let newUser = request.body;
+
+        if(newUser.username === "" || newUser.password === "") {
+            let message = {
+                message: "Please enter username and password to create an account.",
+                error: true
+            };
+            response.send(message);
+        } else {    
+            //Save newTask to database
+            let userObject = new userModel(newUser);
+    
+            userObject.save(function(error){
+                checkError(error, "Successfully saved new user to database.");
+                
+                if(error){
+                    let message = {
+                        message: "An error occured while attempting to create a new account.",
+                        error: true
+                    };
+    
+                    response.send(message);
+                } else {
+                    let message = {
+                        message: "Account created succcessfully.",
+                        error: false
+                    };
+    
+                    response.send(message);
+                }
+            });
+        }
+
     } else if (userDetails.type === "logout") {
 
         request.session.loggedIn = false;
