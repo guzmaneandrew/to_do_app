@@ -173,8 +173,8 @@
                     dueDate: $("#task-due-date").val(),
                     created: todayValue,
                     priority: $("#priority").val(),
-                    deleted: "",
-                    completed: ""
+                    completed: "",
+                    //completed: ""
                 };
                 //POST request to create the task. Send the newTask Object to the createTask Post handler.Console log the response of the server. 
                 $.post("http://localhost:3000/createTask", newTask, function(response){
@@ -212,7 +212,6 @@
                     Created: ${task.created}<br />
                     <button class="edit-button">Edit</button>
                     <button class="complete-button">Complete</button>
-                    <button class="delete-button">Delete</button>
                 </li>`;
             
                 $("#tasks").append(html);
@@ -223,32 +222,32 @@
                 editTask(task);
             });
 
+            // $(".complete-button").click(function () {
+            //     const task = $(this).parent();
+            //     completeTask(task);
+            // });
+
             $(".complete-button").click(function () {
                 const task = $(this).parent();
                 completeTask(task);
             });
-
-            $(".delete-button").click(function () {
-                const task = $(this).parent();
-                deleteTask(task);
-            });
         }
 
-        function completeTask(taskLi) {
-            let dataToSend = {
-                _id: taskLi.attr("id")
-            }
+        // function completeTask(taskLi) {
+        //     let dataToSend = {
+        //         _id: taskLi.attr("id")
+        //     }
 
-            $.post("http://localhost:3000/completeTask", dataToSend, function(response){
-                console.log(response.success);
+        //     $.post("http://localhost:3000/completeTask", dataToSend, function(response){
+        //         console.log(response.success);
 
-                if(response.success){
-                    console.log("Task completed");
-                } else {
-                    console.log("Something happened in the backend");
-                }
-            });
-        }
+        //         if(response.success){
+        //             console.log("Task completed");
+        //         } else {
+        //             console.log("Something happened in the backend");
+        //         }
+        //     });
+        // }
 
         function editTask(taskLi) {
 
@@ -299,13 +298,12 @@
                 Created: ${response.created}<br />
                 <button class="edit-button">Edit</button>
                 <button class="complete-button">Complete</button>
-                <button class="delete-button">Delete</button>
             `;
 
             taskLi.html(html);
             let newEditButton = taskLi.children(".edit-button");
+            // let newCompleteButton = taskLi.children(".complete-button");
             let newCompleteButton = taskLi.children(".complete-button");
-            let newDeleteButton = taskLi.children(".delete-button");
 
 
             newEditButton.click(function() {
@@ -316,9 +314,9 @@
                 completeTask(taskLi);
             });
 
-            newDeleteButton.click(function() {
-                deleteTask(taskLi);
-            });
+            // newDeleteButton.click(function() {
+            //     deleteTask(taskLi);
+            // });
     }
 
         function updateTask(taskLi) {
@@ -347,32 +345,31 @@
                     Created: ${createdUpdate} <br />
                     <button class="edit-button">Edit</button>
                     <button class="complete-button">Complete</button>
-                    <button class="delete-button">Delete</button>
                 `;
 
                 taskLi.html(html);
                 let newEditButton = taskLi.children(".edit-button");
+                // let newCompleteButton = taskLi.children(".complete-button");
                 let newCompleteButton = taskLi.children(".complete-button");
-                let newDeleteButton = taskLi.children(".delete-button");
 
 
                 newEditButton.click(function() {
                     editTask(taskLi);
                 });
 
-                newCompleteButton.click(function() {
-                    completeTask(taskLi);
-                });
+                // newCompleteButton.click(function() {
+                //     completeTask(taskLi);
+                // });
 
-                newDeleteButton.click(function () {
+                newCompleteButton.click(function () {
                 const task = $(this).parent();
-                deleteTask(task);
+                completeTask(task);
             });
             });
 
         }
     
-        function deleteTask(taskLi) {
+        function completeTask(taskLi) {
             const objectToDelete = {
                 _id: taskLi.attr("id")
             }

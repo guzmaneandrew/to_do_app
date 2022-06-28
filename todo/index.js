@@ -56,8 +56,8 @@ const taskStructure = {
     dueDate: String,
     created: String,
     priority: String,
-    deleted: String,
-    completed: String
+    completed: String,
+    //deleted/completed: String
 };
 let taskSchema = new mongoose.Schema(taskStructure);
     //Build a model out of our Schema
@@ -292,21 +292,21 @@ app.post("/deleteTask", function(request, response) {
     });
 });
 
-app.post("/completeTask", function(request, response) {
+// app.post("/completeTask", function(request, response) {
 
-    let taskId = request.body._id;
+//     let taskId = request.body._id;
 
-    taskModel.findByIdAndUpdate({owner: request.session.dbId, _id: taskId}, {completed: "true"}, function(error, results) {
+//     taskModel.findByIdAndUpdate({owner: request.session.dbId, _id: taskId}, {completed: "true"}, function(error, results) {
 
-        checkError(error, "Completed a task and successfully updated a document.");
+//         checkError(error, "Completed a task and successfully updated a document.");
         
-        if(error) {
-            response.send({success: false});
-        } else {
-            response.send({success: true});
-        }
-    });
-});
+//         if(error) {
+//             response.send({success: false});
+//         } else {
+//             response.send({success: true});
+//         }
+//     });
+// });
 
 app.post("/updateTask", function(request, response) {
     let taskId = request.body._id;
