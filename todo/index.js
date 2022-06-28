@@ -103,7 +103,7 @@ app.post("/userSession", function(request, response) {
             } else {
                 response.send({
                     username: null,
-                    message: "Sorry, but username or password is wrong. Try again."
+                    message: "Sorry, but the username or password is wrong. Try again."
                 });
             }  
         });
@@ -115,7 +115,7 @@ app.post("/userSession", function(request, response) {
 
     } else if (userDetails.type === "continue") {
 
-        console.log(userDetails);
+        //console.log(userDetails);
 
         if (request.session.loggedIn === true ) {
             response.send({username: request.session.username, message: ""});
@@ -137,13 +137,7 @@ app.post("/createTask", function(request, response) {
         };
         response.send(message);
     } else {
-        // //Create ID for newTask
-        // let hashData = newTask.description + Date.now();
-        // let hash = md5(hashData);
-        // newTask.id = hash;
-        //Save task to array
-        //tasks.push(newTask);
-        console.log(request.session);
+        //console.log(request.session);
         newTask.owner = request.session.dbId;
 
         //Save newTask to database
@@ -154,7 +148,7 @@ app.post("/createTask", function(request, response) {
             
             if(error){
                 let message = {
-                    message: "Something bad happened saving this task. Contact support.",
+                    message: "An error occured while attempting to save this task.",
                     error: true
                 };
 
@@ -168,12 +162,12 @@ app.post("/createTask", function(request, response) {
                 response.send(message);
             }
         });
-        console.log(newTask);
+        //console.log(newTask);
     }
 });
 
 app.post("/list", function(request, response) {
-    console.log("dbId: " + request.session.dbId);
+    //console.log("dbId: " + request.session.dbId);
     taskModel.find({owner: request.session.dbId}, function(error, results){
 
         checkError(error, "Successfully received tasks from database.");

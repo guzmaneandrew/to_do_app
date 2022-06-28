@@ -1,0 +1,8 @@
+#create-task, #list-tasks, #login, #logout {
+    border: 1px dashed black;
+    margin: 10px;
+}
+
+#logout {
+    display: none;
+}
