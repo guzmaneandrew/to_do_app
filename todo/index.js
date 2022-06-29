@@ -9,9 +9,9 @@ const session = require("express-session");
 //Setup express
 const app = express();
 const http = require('http').Server(app);
-const port = 3000;
-http.listen(port);
-console.log(`The server is running on port ${port}.`);
+const PORT = process.env.PORT || 3000;
+http.listen(PORT);
+console.log(`The server is running on port ${PORT}.`);
 
 // Use body-parser to convert our front-end data into JavaScript Objects.
 app.use(bodyParser.json());
@@ -76,6 +76,10 @@ let userModel = new mongoose.model("users", userSchema);
 //EXPRESS PAGE ROUTES: Routes can have one or more handler functions, which are executed when the route is matched
 //Tell our Express server when someone requests nothing, just types in the domain name
 app.use("/", express.static("public_html/"));
+
+app.get('/', (req, res) => {
+    response.sendFile(__dirname + '/index.html');
+});
 
 //POST Handlers
 app.post("/userSession", function(request, response) { 

@@ -133,6 +133,7 @@
             });
 
             $("#logout-button").click(function() {
+                $("#message").html("");
 
                 const details = {
                     type: "logout",
@@ -199,6 +200,7 @@
         function updateList(arrayList){
             
             $("#tasks").html("");
+            $("#login-message").html("");            
 
             for(let i = 0; i < arrayList.length; i++){
                 let task = arrayList[i];
