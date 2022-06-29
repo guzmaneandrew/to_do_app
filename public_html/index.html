@@ -58,7 +58,9 @@
         //Code inside a $(document).ready() block will only run once the page Document Object Model(DOM) is ready for JavaScript code to execute.
         $(document).ready(function () {
 
-            $.post("http://localhost:3000/userSession", 
+            const URL = "https://to-do-guzmaneandrew.herokuapp.com";
+
+            $.post(URL + "/userSession", 
                 {type: "continue", username: null, password: null},
                 function(response) {
                     //console.log(response);
@@ -83,7 +85,7 @@
                     password: $("#password").val()
                 };
 
-                $.post("http://localhost:3000/userSession", details, function(response) {
+                $.post(URL + "/userSession", details, function(response) {
                     
                     if (response.message === "") {
 
@@ -91,7 +93,7 @@
                         $("#user-message").html(`Welcome, ${details.username}!`);
                         $("#logout").show(1000);     
                         
-                    $.post("http://localhost:3000/list", {}, function(response) {
+                    $.post(URL + "/list", {}, function(response) {
                         updateList(response.list);
                     });
                     
@@ -112,7 +114,7 @@
                     password: $("#password").val()
                 };
 
-                $.post("http://localhost:3000/userSession", details, function(response) {
+                $.post(URL + "/userSession", details, function(response) {
                     
                     if (response.message === "") {
 
@@ -120,7 +122,7 @@
                         $("#user-message").html(`Welcome, ${details.username}!`);
                         $("#logout").show(1000);     
                         
-                    $.post("http://localhost:3000/list", {}, function(response) {
+                    $.post(URL + "/list", {}, function(response) {
                         updateList(response.list);
                     });
                     
@@ -141,7 +143,7 @@
                     password: null
                 };
 
-                $.post("http://localhost:3000/userSession", details, function(response) {
+                $.post(URL + "/userSession", details, function(response) {
                     $("#logout").hide();
 
                     $("#user-message").html("");
@@ -151,7 +153,7 @@
                     $("#login").show(1000);
                 });
 
-                $.post("http://localhost:3000/list", {}, function(response) {
+                $.post(URL + "/list", {}, function(response) {
                         updateList(response.list);
                     });
             });
@@ -161,7 +163,7 @@
             $("#task-due-date").attr("value", todayValue);
 
             //POST request to list the tasks on the web page
-            $.post("http://localhost:3000/list", {}, function(response) {
+            $.post(URL + "/list", {}, function(response) {
                 updateList(response.list);
             });
 
@@ -178,7 +180,7 @@
                     //completed: ""
                 };
                 //POST request to create the task. Send the newTask Object to the createTask Post handler.Console log the response of the server. 
-                $.post("http://localhost:3000/createTask", newTask, function(response){
+                $.post(URL + "/createTask", newTask, function(response){
                     
                     $("#message").html(response.message);
 
@@ -188,7 +190,7 @@
                         $("#message").css("color", "green");
                     }
                     
-                    $.post("http://localhost:3000/list", {}, function(response) {
+                    $.post(URL + "/list", {}, function(response) {
                         updateList(response.list);
                     });  
                 });
@@ -258,7 +260,7 @@
             };
             //console.log(dataToSend);
 
-            $.post("http://localhost:3000/getTask", dataToSend, function(response){
+            $.post(URL + "/getTask", dataToSend, function(response){
 
                 console.log("Service response: " + response);
 
@@ -338,7 +340,7 @@
                 created: createdUpdate
             };
 
-            $.post("/updateTask", updateDetails, function(response) {
+            $.post(URL + "/updateTask", updateDetails, function(response) {
                 let html = `
                     Task: ${descriptionUpdate}<br />
                     Due by: ${dueDateUpdate}<br />
@@ -376,7 +378,7 @@
                 _id: taskLi.attr("id")
             }
 
-            $.post("http://localhost:3000/deleteTask", objectToDelete, function(response) {
+            $.post(URL + "/deleteTask", objectToDelete, function(response) {
                 taskLi.remove();
             });
         }
