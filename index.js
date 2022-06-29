@@ -8,10 +8,14 @@ const session = require("express-session");
 
 //Setup express
 const app = express();
-const http = require('http').Server(app);
+// const http = require('http').Server(app);
+const http = require("http");
 const PORT = process.env.PORT || 3000;
-http.listen(PORT);
-console.log(`The server is running on port ${PORT}.`);
+// http.listen(PORT);
+// console.log(`The server is running on port ${PORT}.`);
+app.listen(process.env.PORT || PORT , () => {
+    console.log(`The server is running on port ${PORT}!`);
+});
 
 // Use body-parser to convert our front-end data into JavaScript Objects.
 app.use(bodyParser.json());
@@ -78,8 +82,10 @@ let userModel = new mongoose.model("users", userSchema);
 app.use("/", express.static("public_html/"));
 
 app.get('/', (req, res) => {
-    response.sendFile(__dirname + '/index.html');
+    response.sendFile(__dirname + '/public_html/index.html');
 });
+
+console.log(__dirname);
 
 //POST Handlers
 app.post("/userSession", function(request, response) { 
