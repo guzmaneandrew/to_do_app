@@ -1,4 +1,4 @@
 /node_modules
-/credentials.js
+# /credentials.js
 /notes.txt
 /requests.txt
