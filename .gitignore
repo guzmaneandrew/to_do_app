@@ -1,3 +1,4 @@
-todo/node_modules
-todo/credentials.js
-credentials.txt
+/node_modules
+/credentials.js
+/notes.txt
+/requests.txt
