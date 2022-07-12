@@ -5,6 +5,7 @@ const req = require("express/lib/request");
 const credentials = require("./credentials.js");
 const md5 = require("md5");
 const session = require("express-session");
+const cors = require("cors");
 
 //Setup express
 const app = express();
@@ -17,6 +18,7 @@ app.listen(process.env.PORT || PORT , () => {
     console.log(`The server is running on port ${PORT}!`);
 });
 
+app.use(cors());
 // Use body-parser to convert our front-end data into JavaScript Objects.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

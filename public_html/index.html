@@ -200,6 +200,7 @@
 
         //This function will take in an array of Todo objects, and create an li element for each of them and place inside of the existing ul. This function deletes any existing items in the URL.
         function updateList(arrayList){
+            const URL = "https://to-do-guzmaneandrew.herokuapp.com";
             
             $("#tasks").html("");
             $("#login-message").html("");            
@@ -254,6 +255,7 @@
         // }
 
         function editTask(taskLi) {
+            const URL = "https://to-do-guzmaneandrew.herokuapp.com";
 
             const dataToSend = {
                 id: taskLi.attr("id")
@@ -324,13 +326,14 @@
     }
 
         function updateTask(taskLi) {
-           const descriptionUpdate = taskLi.children(".update-description").val();
-           const notesUpdate = taskLi.children(".update-notes").val();
-           const priorityUpdate = taskLi.children(".update-priority").val();
-           const dueDateUpdate = taskLi.children(".update-dueDate").val();
-           let createdUpdate = dateValue();
+            const URL = "https://to-do-guzmaneandrew.herokuapp.com";
+            const descriptionUpdate = taskLi.children(".update-description").val();
+            const notesUpdate = taskLi.children(".update-notes").val();
+            const priorityUpdate = taskLi.children(".update-priority").val();
+            const dueDateUpdate = taskLi.children(".update-dueDate").val();
+            let createdUpdate = dateValue();
 
-           console.log("updated" + createdUpdate);
+            console.log("updated" + createdUpdate);
             const updateDetails = {
                 _id: taskLi.attr("id"),
                 description: descriptionUpdate,
@@ -374,6 +377,8 @@
         }
     
         function completeTask(taskLi) {
+            const URL = "https://to-do-guzmaneandrew.herokuapp.com";
+            
             const objectToDelete = {
                 _id: taskLi.attr("id")
             }
