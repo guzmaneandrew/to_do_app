@@ -27,6 +27,7 @@ h1, h2 {
     margin-left: auto;
     margin-right: auto;
     display: flex;
+    align-items: center;
 }
 
 button, input, textarea {
@@ -40,7 +41,6 @@ button, input, textarea {
     border-radius: 10px;
     width: 400px;
     height: fit-content;
-    margin-top: 10%;
     padding: 10px;
 }
 
