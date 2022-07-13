@@ -2,6 +2,9 @@ body {
     font-size: 16px;
     background-color: #07575B;
     color: whitesmoke;
+    min-width: fit-content;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, h2 {
@@ -10,7 +13,14 @@ h1, h2 {
 }
 
 #login {
+    margin-bottom: 20px;
+    align-self: flex-end;
+    width: fit-content;
     display: flex;
+}
+
+#login > * {
+    flex-shrink: 0;
 }
 
 #logout {
@@ -27,12 +37,14 @@ h1, h2 {
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 button, input, textarea {
     background-color: #C4DFE6;
     border-radius: 8px;
+    font-size: 1rem;
 }
 
 #create-task {
@@ -44,8 +56,9 @@ button, input, textarea {
     padding: 10px;
 }
 
-#create-task input {
+#create-task input, #create-task textarea {
     margin-bottom: 5px;
+    font-size: 1.25rem;
 }
 
 #create-task textarea{
@@ -53,12 +66,21 @@ button, input, textarea {
     max-width: 375px;
 }
 
+#task-due-date {
+    height: 30px;
+}
+
+#priority {
+    font-size: 1rem;
+    height: 30px;
+    width: 30px;
+}
+
 #task-notes {
     height: 100px;
 }
 
 #create-button {
-    font-size: 1.5rem;
     width: fit-content;
     margin: auto;
 }
@@ -72,6 +94,7 @@ button, input, textarea {
 }
 
 #list-tasks li {
+    font-size: 1.25rem;
     min-width: 500px;
     word-wrap: break-word;
     background-color: #003B46;
