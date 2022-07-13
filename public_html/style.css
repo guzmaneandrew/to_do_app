@@ -1,8 +1,77 @@
-#create-task, #list-tasks, #login, #logout {
-    border: 1px dashed black;
-    margin: 10px;
+body {
+    font-size: 16px;
+    background-color: #07575B;
+    color: whitesmoke;
+}
+
+h1, h2 {
+    margin-top: 5px;
+    text-align: center;
+}
+
+#login {
+    display: flex;
 }
 
 #logout {
     display: none;
+}
+
+#login, #logout {
+    height: 10%;
+}
+
+#container {
+    width: 75%;
+    min-height: 75vh;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+
+button, input, textarea {
+    background-color: #C4DFE6;
+    border-radius: 8px;
+}
+
+#create-task {
+    width: 400px;
+    height: fit-content;
+    margin-top: 10%;
+}
+
+#create-task input {
+    margin-bottom: 5px;
+}
+
+#create-task textarea{
+    width: 375px;
+    max-width: 375px;
+}
+
+#task-notes {
+    height: 100px;
+}
+
+#create-button {
+    font-size: 1.5rem;
+    width: fit-content;
+    margin: auto;
+}
+
+.button-center {
+    text-align: center;
+}
+
+#list-tasks {
+    min-width: 500px;
+}
+
+#list-tasks li {
+    background-color: #003B46;
+    list-style: none;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
 }
