@@ -35,9 +35,13 @@ button, input, textarea {
 }
 
 #create-task {
+    background-color: whitesmoke;
+    color: #003B46;
+    border-radius: 10px;
     width: 400px;
     height: fit-content;
     margin-top: 10%;
+    padding: 10px;
 }
 
 #create-task input {
@@ -68,6 +72,8 @@ button, input, textarea {
 }
 
 #list-tasks li {
+    min-width: 500px;
+    word-wrap: break-word;
     background-color: #003B46;
     list-style: none;
     border: 1px solid black;
